@@ -1,0 +1,29 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <mirrors>
+    <!-- Redirige todas las solicitudes de Maven Central a nuestro Nexus -->
+    <mirror>
+      <id>${CENTRAL_REPO}</id>
+      <mirrorOf>central</mirrorOf>
+      <url>http://${NEXUS_HOST}:${NEXUS_PORT}/repository/${CENTRAL_REPO}/</url>
+    </mirror>
+  </mirrors>
+
+  <servers>
+    <!--credenciales para repositorios que requieran autenticación -->
+    <server>
+      <id>${CENTRAL_REPO}</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+     <server>
+      <id>${RELEASE_REPO}</id>
+      <username>${NEXUS_USER}</username>
+      <password>${NEXUS_PASS}</password>
+    </server>
+  </servers>
+
+</settings>
