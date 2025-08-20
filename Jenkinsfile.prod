@@ -1,0 +1,40 @@
+def COLOR_MAP = [
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
+    'UNSTABLE': 'warning',
+    'ABORTED': '#CCCCCC'
+]
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'MAVEN3.9'
+        jdk 'JDK21'
+    }
+
+    environment {
+        ECS_CLUSTER='petclinic-prod'
+        ECS_SERVICE='petclinic-task-service-prod'
+
+    }
+
+    stages {
+        stage('Deploy to Production ECS'){
+            steps{
+                withAWS(credentials: 'awscreds', region: 'us-east-1'){
+                    sh "aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_SERVICE} --force-new-deployment"  
+                }
+            }
+        }
+    }
+
+/*  post {
+        always {
+            echo 'Slack Notifications'
+            slackSend channel: '#demo-app-ci-pipeline',
+                color: COLOR_MAP[currentBuild.currentResult],
+                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        }
+    } */
+}
