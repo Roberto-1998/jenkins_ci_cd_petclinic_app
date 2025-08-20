@@ -146,6 +146,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh "docker rmi ${APP_REGISTRY}:${env.BUILD_NUMBER} || true"
+                    sh "docker rmi ${APP_REGISTRY}:latest || true"
+                }
+            }
+        }
     }
 
 /*  post {
