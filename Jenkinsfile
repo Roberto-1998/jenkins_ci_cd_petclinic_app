@@ -28,6 +28,9 @@ pipeline {
         REGISTRY_CREDENTIALS = 'ecr:us-east-1:awscreds'
         APP_REGISTRY = '585008040165.dkr.ecr.us-east-1.amazonaws.com/petclinic-app-image'
         PETCLINIC_REGISTRY = 'https://585008040165.dkr.ecr.us-east-1.amazonaws.com'
+        ECS_CLUSTER='petclinic-staging'
+        ECS_SERVICE='petclinic-task-service-7me3dpdu'
+
     }
 
     stages {
@@ -143,6 +146,14 @@ pipeline {
                         dockerImage.push("${env.BUILD_NUMBER}")
                         dockerImage.push('latest')
                     }
+                }
+            }
+        }
+
+        stage('Deploy to Staging ECS'){
+            steps{
+                withAWS(credentials: 'awscreds', region: 'us-east-1'){
+                    sh "aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_SERVICE} --force-new-deployment"  
                 }
             }
         }
