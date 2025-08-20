@@ -25,7 +25,7 @@ pipeline {
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
         PROJECT_NAME = 'petclinic-app'
-        REGISTRY_CREDENTIALS = 'awscreds'
+        REGISTRY_CREDENTIALS = 'ecr:us-east-1:awscreds'
         APP_REGISTRY = '585008040165.dkr.ecr.us-east-1.amazonaws.com/petclinic-app-image'
         PETCLINIC_REGISTRY = 'https://585008040165.dkr.ecr.us-east-1.amazonaws.com'
     }
