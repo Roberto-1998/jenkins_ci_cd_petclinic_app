@@ -28,9 +28,8 @@ pipeline {
         REGISTRY_CREDENTIALS = 'ecr:us-east-1:awscreds'
         APP_REGISTRY = '585008040165.dkr.ecr.us-east-1.amazonaws.com/petclinic-app-image'
         PETCLINIC_REGISTRY = 'https://585008040165.dkr.ecr.us-east-1.amazonaws.com'
-        ECS_CLUSTER='petclinic-staging'
-        ECS_SERVICE='petclinic-task-service-7me3dpdu'
-
+        ECS_CLUSTER = 'petclinic-staging'
+        ECS_SERVICE = 'petclinic-task-service-7me3dpdu'
     }
 
     stages {
@@ -50,14 +49,14 @@ pipeline {
             }
         }
 
-      /*   stage('Test') {
+        stage('Test') {
             steps {
                 dir(env.APP_DIR) {
                     sh 'mvn -s ../settings.xml test'
                     sh 'mvn -s ../settings.xml verify'
                 }
             }
-        } */
+        }
         stage('Code Quality') {
             steps {
                 dir(env.APP_DIR) {
@@ -150,10 +149,10 @@ pipeline {
             }
         }
 
-        stage('Deploy to Staging ECS'){
-            steps{
-                withAWS(credentials: 'awscreds', region: 'us-east-1'){
-                    sh "aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_SERVICE} --force-new-deployment"  
+        stage('Deploy to Staging ECS') {
+            steps {
+                withAWS(credentials: 'awscreds', region: 'us-east-1') {
+                    sh "aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_SERVICE} --force-new-deployment"
                 }
             }
         }
@@ -168,12 +167,12 @@ pipeline {
         }
     }
 
-/*  post {
+    post {
         always {
             echo 'Slack Notifications'
-            slackSend channel: '#demo-app-ci-pipeline',
+            slackSend channel: '#petclinic-app',
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
-    } */
+    }
 }
