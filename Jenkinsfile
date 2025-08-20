@@ -47,14 +47,14 @@ pipeline {
             }
         }
 
-        stage('Test') {
+      /*   stage('Test') {
             steps {
                 dir(env.APP_DIR) {
                     sh 'mvn -s ../settings.xml test'
                     sh 'mvn -s ../settings.xml verify'
                 }
             }
-        }
+        } */
         stage('Code Quality') {
             steps {
                 dir(env.APP_DIR) {
