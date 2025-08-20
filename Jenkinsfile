@@ -68,8 +68,8 @@ pipeline {
                 dir(env.APP_DIR) {
                     withSonarQubeEnv("${SONARSERVER}") {
                         sh """${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=demo-app \
-                        -Dsonar.projectName=demo-app \
+                        -Dsonar.projectKey=${PROJECT_NAME} \
+                        -Dsonar.projectName=${PROJECT_NAME} \
                         -Dsonar.projectVersion=1.0 \
                         -Dsonar.sources=src/main/java \
                         -Dsonar.tests=src/test/java \
@@ -95,7 +95,7 @@ pipeline {
             }
         }
 
-       /*  stage('Upload Artifact') {
+        stage('Upload Artifact') {
             steps {
                 dir(env.APP_DIR) {
                     nexusArtifactUploader(
@@ -109,13 +109,13 @@ pipeline {
         artifacts: [
             [artifactId: "${PROJECT_NAME}",
              classifier: '',
-             file: 'target/my-app-1.0-SNAPSHOT.jar',
+             file: 'target/spring-petclinic-3.5.0-SNAPSHOT.jar',
              type: 'jar']
         ]
      )
                 }
             }
-        } */
+        }
     }
 
  post {
