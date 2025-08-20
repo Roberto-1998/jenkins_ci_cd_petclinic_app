@@ -1,4 +1,4 @@
-def COLOR_MAP =[
+def COLOR_MAP = [
     'SUCCESS': 'good',
     'FAILURE': 'danger',
     'UNSTABLE': 'warning',
@@ -25,6 +25,9 @@ pipeline {
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
         PROJECT_NAME = 'petclinic-app'
+        REGISTRY_CREDENTIALS = 'ec2:us-east-1:awscreds'
+        APP_REGISTRY = '585008040165.dkr.ecr.us-east-1.amazonaws.com/petclinic-app-image'
+        PETCLINIC_REGISTRY = 'https://585008040165.dkr.ecr.us-east-1.amazonaws.com'
     }
 
     stages {
@@ -113,6 +116,32 @@ pipeline {
              type: 'jar']
         ]
      )
+                }
+            }
+        }
+
+        stage('Build App Image') {
+            steps {
+                script {
+                    def jarName = "${PROJECT_NAME}-${env.BUILD_ID}-${env.BUILD_TIMESTAMP}.jar"
+
+                    def downloadUrl = "http://${NEXUS_HOST}:${NEXUS_PORT}/repository/${RELEASE_REPO}/QA/${PROJECT_NAME}/${env.BUILD_ID}-${env.BUILD_TIMESTAMP}/${jarName}"
+
+                    sh 'mkdir -p docker_build'
+
+                    sh "curl -u ${NEXUS_USER}:${NEXUS_PASS} -o docker_build/${jarName} ${downloadUrl}"
+
+                    dockerImage = docker.build("${APP_REGISTRY}:${env.BUILD_NUMBER}", '-f Dockerfiles/Dockerfile docker_build')
+                }
+            }
+        }
+        stage('Upload App Image') {
+            steps {
+                script {
+                    docker.withRegistry(PETCLINIC_REGISTRY, REGISTRY_CREDENTIALS) {
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push('latest')
+                    }
                 }
             }
         }
