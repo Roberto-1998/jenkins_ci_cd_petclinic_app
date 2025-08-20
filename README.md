@@ -23,7 +23,6 @@ The goal was to take a real-world Java application from GitHub and implement a f
 - The `verify` goal ensures that the project is in a consistent state.  
 
 **Technologies:** JUnit, Maven  
-**Screenshot:** ![SonarQube Tests](screenshots/sonar-qube.png)
 
 ### 3. Code Quality & Static Analysis
 - **Checkstyle** is executed to enforce coding standards.  
