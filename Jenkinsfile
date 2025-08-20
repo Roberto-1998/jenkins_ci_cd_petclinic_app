@@ -128,6 +128,7 @@ pipeline {
                     def downloadUrl = "http://${NEXUS_HOST}:${NEXUS_PORT}/repository/${RELEASE_REPO}/QA/${PROJECT_NAME}/${env.BUILD_ID}-${env.BUILD_TIMESTAMP}/${jarName}"
 
                     sh 'mkdir -p docker_build'
+                    sh 'rm -rf docker_build/*'
 
                     sh "curl -u ${NEXUS_USER}:${NEXUS_PASS} -o docker_build/${jarName} ${downloadUrl}"
 
